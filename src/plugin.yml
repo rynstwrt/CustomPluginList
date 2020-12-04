@@ -1,0 +1,8 @@
+name: CustomPluginList
+version: 0.0.2
+author: Ryan Stewart
+main: art.ryanstew.custompluginslist.Main
+api-version: 1.16
+commands:
+  plugins:
+    description: Master command for CustomPluginsList.
