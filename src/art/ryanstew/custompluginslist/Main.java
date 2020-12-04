@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class Main extends JavaPlugin implements Listener {
 
-    String pluginPrefix = ChatColor.RED + "[" + ChatColor.AQUA + "CustomPluginsList" + ChatColor.RED + "] " + ChatColor.RESET;
+    String pluginPrefix = ChatColor.translateAlternateColorCodes('&', "&c&l[&b&lCustomPluginsList&c&l]&7&l: &r");
 
     @Override
     public void onEnable()
@@ -51,17 +51,16 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onCommandPreprocess(PlayerCommandPreprocessEvent e)
     {
-        if (e.getMessage().startsWith("/plugins"))
-        {
-            Player player = e.getPlayer();
+        Player player = e.getPlayer();
 
-            if (e.getMessage().indexOf("reload") != -1 && player.hasPermission("custompluginlist.reload"))
+        if (e.getMessage().startsWith("/plugins") && !player.hasPermission("custompluginlist.bypass"))
+        {
+            if (e.getMessage().equalsIgnoreCase("/plugins reload") && player.hasPermission("custompluginlist.reload"))
             {
                 e.setCancelled(true);
-
                 reloadConfig();
                 player.sendMessage("\n");
-                player.sendMessage(pluginPrefix + ChatColor.GREEN + "The plugin has been successfully reloaded.");
+                player.sendMessage(pluginPrefix + ChatColor.GREEN + "The config has been successfully reloaded.");
                 player.sendMessage("\n");
 
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);

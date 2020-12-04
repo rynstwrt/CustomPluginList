@@ -1,5 +1,5 @@
 name: CustomPluginList
-version: 0.0.2
+version: 0.0.3
 author: Ryan Stewart
 main: art.ryanstew.custompluginslist.Main
 api-version: 1.16
