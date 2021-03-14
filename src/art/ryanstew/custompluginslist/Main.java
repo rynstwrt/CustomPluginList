@@ -12,10 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -51,36 +48,46 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onCommandPreprocess(PlayerCommandPreprocessEvent e)
     {
+        if (!e.getMessage().startsWith("/plugins")) return;
         Player player = e.getPlayer();
+        String[] cmdParts = e.getMessage().trim().split(" ");
 
-        if (e.getMessage().startsWith("/plugins") && !player.hasPermission("custompluginlist.bypass"))
+        // called when /plugins
+        // return the fake plugin list
+        if (cmdParts.length == 1 || !player.hasPermission("custompluginlist.admin"))
         {
-            if (e.getMessage().equalsIgnoreCase("/plugins reload") && player.hasPermission("custompluginlist.reload"))
+            e.setCancelled(true);
+
+            List<String> pluginList = getConfig().getStringList("plugins");
+            String message = String.format("&fPlugins (%d): ", pluginList.size());
+
+            for (int i = 0; i < pluginList.size(); ++i)
             {
-                e.setCancelled(true);
-                reloadConfig();
-                player.sendMessage("\n");
-                player.sendMessage(pluginPrefix + ChatColor.GREEN + "The config has been successfully reloaded.");
-                player.sendMessage("\n");
-
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
+                message += "&a" + pluginList.get(i);
+                if (i != pluginList.size() - 1)
+                    message += "&f, ";
             }
-            else if (player.hasPermission("custompluginlist.listplugins"))
-            {
-                e.setCancelled(true);
 
-                List<String> pluginList = getConfig().getStringList("plugins");
-                String message = String.format("&fPlugins (%d): ", pluginList.size());
-
-                for (int i = 0; i < pluginList.size(); ++i)
-                {
-                    message += "&a" + pluginList.get(i);
-                    if (i != pluginList.size() - 1)
-                        message += "&f, ";
-                }
-
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-            }
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+            return;
         }
+
+        // /plugins adminview or /plugins av
+        String firstArgument = cmdParts[1];
+        if (firstArgument.equalsIgnoreCase("adminview") || firstArgument.equalsIgnoreCase("av")) return;
+
+        if (firstArgument.equalsIgnoreCase("reload"))
+        {
+            e.setCancelled(true);
+            reloadConfig();
+            player.sendMessage("");
+            player.sendMessage(pluginPrefix + ChatColor.GREEN + "The config has been successfully reloaded.");
+            player.sendMessage("");
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
+            return;
+        }
+
+        e.setCancelled(true);
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cIncorrect usage! Usage: &a&l/plugins <adminview/av/reload>"));
     }
 }
