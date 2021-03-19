@@ -1,0 +1,9 @@
+# The config file of CPL! :)
+
+# "message" is the message you want displayed when users without the
+# bypass permission run /plugins, /pl, or /?.
+
+# The new plugin list will be formatted as "Plugins (X): Y, Z, ..." format.
+# Each space is a new plugin entry in the list.
+
+message: Why are you so concerned with the plugins on this server? :)

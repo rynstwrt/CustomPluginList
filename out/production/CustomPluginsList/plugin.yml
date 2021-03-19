@@ -1,8 +1,22 @@
 name: CustomPluginList
-version: 0.0.3
-author: Ryan Stewart
+version: 1.0.0
+author: RuntimeRyan
 main: art.ryanstew.custompluginslist.Main
 api-version: 1.16
 commands:
-  plugins:
-    description: Master command for CustomPluginsList.
+  custompluginlist:
+    description: Master command for CustomPluginList.
+    aliases: [cpl]
+permissions:
+  cpl.help:
+    description: Access to /cpl and /cpl help.
+    default: op
+  cpl.reload:
+    description: Permission to reload CPL.
+    default: op
+  cpl.seemessage:
+    description: Permission to see the message seen for players without the cpl.bypass node.
+    default: op
+  cpl.bypass:
+    description: See the real plugin list when running /plugins.
+    default: op
