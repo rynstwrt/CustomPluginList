@@ -36,9 +36,9 @@ public class CPLCommand implements CommandExecutor
 
             String[] lines = {
                     "&7✧･ﾟ: *✧･ﾟ:* &a&lCustomPluginList &7*:･ﾟ✧*:･ﾟ✧",
-                    "&f- &a/custompluginlist &for &a/cpl help",
-                    "&f- &a/cpl seemessage &for &a/cpl seemsg",
-                    "&f- &a/cpl reload"
+                    "&f- &6/custompluginlist &for &6/cpl help",
+                    "&f- &6/cpl seemessage &for &6/cpl seemsg",
+                    "&f- &6/cpl reload"
             };
             plugin.sendMessage(commandSender, String.join("\n", lines));
             return true;
