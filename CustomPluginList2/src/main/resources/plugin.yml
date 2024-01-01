@@ -1,0 +1,25 @@
+name: CustomPluginList
+version: '${project.version}'
+main: art.ryanstew.custompluginlist.CustomPluginList
+api-version: '1.20'
+description: 'A plugin to rewrite the results of /plugins, /pl, or /?.'
+authors: ['Ryan Stewart', 'RuntimeRyan']
+prefix: 'CustomPluginList'
+commands:
+  custompluginlist:
+    description: The main command of CustomPluginList.
+    aliases: cpl
+    usage: 'Usage: /cpl'
+permissions:
+  cpl.help:
+    description: Permission to run /cpl help.
+    default: op
+  cpl.seemessage:
+    description: Permission to run /cpl seemsg.
+    default: op
+  cpl.reload:
+    description: Permission to run /cpl reload.
+    default: op
+  cpl.bypass:
+    description: Users with this node will see the real plugin list when running /plugins.
+    default: op

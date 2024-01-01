@@ -1,5 +1,5 @@
 # CustomPluginList
-A spigot plugin to rewrite the results when users run /plugins, /pl, or /?.
+A spigot plugin to rewrite the results of /plugins, /pl, or /?.
 
 You can find downloads and information on the Spigot page, which can be found by clicking [here](https://www.spigotmc.org/resources/custompluginlist.86414/).
 

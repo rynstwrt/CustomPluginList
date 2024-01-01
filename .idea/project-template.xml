@@ -1,3 +1,0 @@
-<template>
-  <input-field default="art.ryanstew.pluginname">IJ_BASE_PACKAGE</input-field>
-</template>
