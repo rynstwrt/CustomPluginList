@@ -31,7 +31,7 @@ public class CPLCommand implements CommandExecutor
     }
 
 
-    private static void createOrLoadConfig()
+    private static boolean createOrLoadConfig()
     {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         if (!configFile.exists())
@@ -42,19 +42,14 @@ public class CPLCommand implements CommandExecutor
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         resultMessage = config.getString("message");
+
+        return resultMessage != null;
     }
 
 
     private static void sendMessage(CommandSender sender, String message)
     {
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
-
-
-    private static boolean reloadConfig()
-    {
-        createOrLoadConfig();
-        return true;
     }
 
 
@@ -65,7 +60,7 @@ public class CPLCommand implements CommandExecutor
         if (strings.length == 0 || strings[0].equalsIgnoreCase("help"))
         {
             String[] lines = {
-                    "&a✧･ﾟ: *✧･ﾟ:* &lCustomPluginList &a*:･ﾟ✧*:･ﾟ✧",
+                    "&7✧･ﾟ: *✧･ﾟ:* &a&lCustomPluginList &7*:･ﾟ✧*:･ﾟ✧",
                     "&f- &a/custompluginlist &for &a/cpl help",
                     "&f- &a/cpl seemessage &for &a/cpl seemsg",
                     "&f- &a/cpl reload"
@@ -83,6 +78,7 @@ public class CPLCommand implements CommandExecutor
                 return true;
             }
 
+            sendMessage(commandSender, PREFIX + "&fHere is the custom plugin list:");
             sendMessage(commandSender, resultMessage);
             return true;
         }
@@ -90,7 +86,7 @@ public class CPLCommand implements CommandExecutor
         // /cpl reload
         if (strings[0].equalsIgnoreCase("reload"))
         {
-            sendMessage(commandSender, PREFIX + (reloadConfig() ? CONFIG_RELOAD_SUCCESS_MESSAGE : CONFIG_RELOAD_FAIL_MESSAGE));
+            sendMessage(commandSender, PREFIX + (createOrLoadConfig() ? CONFIG_RELOAD_SUCCESS_MESSAGE : CONFIG_RELOAD_FAIL_MESSAGE));
             return true;
         }
 
