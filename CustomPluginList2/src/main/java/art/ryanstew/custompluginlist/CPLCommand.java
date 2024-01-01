@@ -15,41 +15,10 @@ public class CPLCommand implements CommandExecutor
 {
     private static CustomPluginList plugin;
 
-    private static final String PREFIX = "&f&l[&a&lCPL&f&l]&r ";
-    private static final String CONFIG_RELOAD_SUCCESS_MESSAGE = "&aConfig successfully reloaded!";
-    private static final String CONFIG_RELOAD_FAIL_MESSAGE = "&cFailed to reload the configuration!";
-    private static final String INCORRECT_USE_MESSAGE = "&cIncorrect usage! Run /cpl help for instructions.";
-    private static final String INCORRECT_CONFIG_MESSAGE = "&cMessage not found in config.yml!";
-
-    private static String resultMessage;
-
 
     CPLCommand(CustomPluginList customPluginList)
     {
         plugin = customPluginList;
-        createOrLoadConfig();
-    }
-
-
-    private static boolean createOrLoadConfig()
-    {
-        File configFile = new File(plugin.getDataFolder(), "config.yml");
-        if (!configFile.exists())
-        {
-            configFile.getParentFile().mkdirs();
-            plugin.saveResource("config.yml", false);
-        }
-
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        resultMessage = config.getString("message");
-
-        return resultMessage != null;
-    }
-
-
-    private static void sendMessage(CommandSender sender, String message)
-    {
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 
 
@@ -59,39 +28,59 @@ public class CPLCommand implements CommandExecutor
         // Help message (/custompluginlist, /cpl, /cpl help)
         if (strings.length == 0 || strings[0].equalsIgnoreCase("help"))
         {
+            if (!commandSender.hasPermission(plugin.HELP_PERMISSION))
+            {
+                plugin.sendMessage(commandSender, plugin.PREFIX + plugin.NO_PERMISSION_MESSAGE);
+                return true;
+            }
+
             String[] lines = {
                     "&7✧･ﾟ: *✧･ﾟ:* &a&lCustomPluginList &7*:･ﾟ✧*:･ﾟ✧",
                     "&f- &a/custompluginlist &for &a/cpl help",
                     "&f- &a/cpl seemessage &for &a/cpl seemsg",
                     "&f- &a/cpl reload"
             };
-            sendMessage(commandSender, String.join("\n", lines));
+            plugin.sendMessage(commandSender, String.join("\n", lines));
             return true;
         }
 
         // /cpl seemessage or /cpl seemsg
         if (strings[0].equalsIgnoreCase("seemessage") || strings[0].equalsIgnoreCase("seemsg"))
         {
-            if (resultMessage == null)
+            if (!commandSender.hasPermission(plugin.SEE_MESSAGE_PERMISSION))
             {
-                sendMessage(commandSender, PREFIX + INCORRECT_CONFIG_MESSAGE);
+                plugin.sendMessage(commandSender, plugin.PREFIX + plugin.NO_PERMISSION_MESSAGE);
                 return true;
             }
 
-            sendMessage(commandSender, PREFIX + "&fHere is the custom plugin list:");
-            sendMessage(commandSender, resultMessage);
+            String message = plugin.getCPLConfig().getString("message");
+            if (message == null)
+            {
+                plugin.sendMessage(commandSender, plugin.PREFIX + plugin.INCORRECT_CONFIG_MESSAGE);
+                return true;
+            }
+
+            plugin.sendMessage(commandSender, plugin.PREFIX + "&fHere is the custom plugin list:");
+            plugin.sendMessage(commandSender, message);
             return true;
         }
 
         // /cpl reload
         if (strings[0].equalsIgnoreCase("reload"))
         {
-            sendMessage(commandSender, PREFIX + (createOrLoadConfig() ? CONFIG_RELOAD_SUCCESS_MESSAGE : CONFIG_RELOAD_FAIL_MESSAGE));
+            if (!commandSender.hasPermission(plugin.RELOAD_PERMISSION))
+            {
+                plugin.sendMessage(commandSender, plugin.PREFIX + plugin.NO_PERMISSION_MESSAGE);
+                return true;
+            }
+
+            boolean success = plugin.loadConfig();
+            plugin.sendMessage(commandSender, plugin.PREFIX + (success ? plugin.CONFIG_RELOAD_SUCCESS_MESSAGE : plugin.CONFIG_RELOAD_FAIL_MESSAGE));
             return true;
         }
 
         // Incorrect usage
-        sendMessage(commandSender, PREFIX + INCORRECT_USE_MESSAGE);
+        plugin.sendMessage(commandSender, plugin.PREFIX + plugin.INCORRECT_USE_MESSAGE);
         return true;
     }
 }
